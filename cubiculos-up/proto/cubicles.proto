@@ -1,0 +1,70 @@
+syntax = "proto3";
+
+package cubicles;
+
+option go_package = "cubiculosup.com/proto;cubiclespb";
+
+import "google/protobuf/timestamp.proto";
+
+// ----------------- Mensajes -----------------
+
+message Metadata {
+  string id = 1;
+  string name = 2;
+  string location = 3;
+  int32 capacity = 4;
+}
+
+message Reservation {
+  string recordId = 1;
+  string recordType = 2;
+  string userId = 3;
+  google.protobuf.Timestamp start = 4;
+  google.protobuf.Timestamp end = 5;
+  string status = 6;
+}
+
+message Availability {
+  bool availableNow = 1;
+  google.protobuf.Timestamp nextAvailable = 2;
+}
+
+message CubicleDetails {
+  Metadata metadata = 1;
+  Availability reservation = 2;
+}
+
+// ----------------- Requests / Responses -----------------
+
+message GetMetadataRequest { string cubicleId = 1; }
+message GetMetadataResponse { Metadata metadata = 1; }
+
+message CheckAvailabilityRequest { string cubicleId = 1; }
+message CheckAvailabilityResponse { Availability availability = 1; }
+
+message GetCubicleRequest { string cubicleId = 1; }
+message GetCubicleResponse { CubicleDetails details = 1; }
+
+// Opcionales para manejo de reservaciones
+message CreateReservationRequest { Reservation reservation = 1; }
+message CreateReservationResponse { string recordId = 1; }
+
+message CancelReservationRequest { string recordId = 1; }
+message CancelReservationResponse { bool ok = 1; }
+
+// ----------------- Services -----------------
+
+service MetadataService {
+  rpc GetMetadata(GetMetadataRequest) returns (GetMetadataResponse);
+}
+
+service ReservationService {
+  rpc CheckAvailability(CheckAvailabilityRequest) returns (CheckAvailabilityResponse);
+  rpc CreateReservation(CreateReservationRequest) returns (CreateReservationResponse);
+  rpc CancelReservation(CancelReservationRequest) returns (CancelReservationResponse);
+}
+
+service CubicleService {
+  // Agrega datos de metadata + disponibilidad
+  rpc GetCubicle(GetCubicleRequest) returns (GetCubicleResponse);
+}
