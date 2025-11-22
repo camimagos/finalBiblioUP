@@ -14,14 +14,11 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/reflection"
 	"google.golang.org/grpc/resolver"
-	"google.golang.org/grpc/resolver/dns"
 )
 
-// init() se ejecuta al inicio del programa.
-// Registra el resolvedor DNS de Go para manejar los nombres de servicios de K8s
-// (ej: 'metadata'), lo cual es crucial para la estabilidad en el arranque del Pod.
 func init() {
-	resolver.Register(dns.NewBuilder())
+	// Fuerza gRPC a usar DNS como scheme por defecto (necesario para Kubernetes)
+	resolver.SetDefaultScheme("dns")
 }
 
 // En cubicle/cmd/main.go (cerca de los imports)

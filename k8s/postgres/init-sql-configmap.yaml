@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: init-sql-configmap
+data:
+  init.sql: |
+    CREATE TABLE IF NOT EXISTS metadata (
+        id TEXT PRIMARY KEY,
+        name TEXT,
+        location TEXT,
+        capacity INTEGER
+    );
+
+    CREATE TABLE IF NOT EXISTS reservations (
+        id SERIAL PRIMARY KEY,
+        record_id TEXT,
+        record_type TEXT,
+        user_id TEXT,
+        start_time TIMESTAMP,
+        end_time TIMESTAMP,
+        status TEXT
+    );

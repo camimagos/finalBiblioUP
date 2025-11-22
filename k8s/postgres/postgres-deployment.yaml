@@ -14,15 +14,40 @@ spec:
     spec:
       containers:
       - name: postgres
-        image: postgres:15
-        envFrom:
-          - secretRef:
-              name: postgres-secret
+        image: postgres:14
         ports:
           - containerPort: 5432
+        env:
+          - name: POSTGRES_USER
+            valueFrom:
+              secretKeyRef:
+                name: postgres-secret
+                key: POSTGRES_USER
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: postgres-secret
+                key: POSTGRES_PASSWORD
+          - name: POSTGRES_DB
+            valueFrom:
+              secretKeyRef:
+                name: postgres-secret
+                key: POSTGRES_DB
+
         volumeMounts:
-          - mountPath: /var/lib/postgresql/data
-            name: postgres-data
+          - name: postgres-storage
+            mountPath: /var/lib/postgresql/data
+
+          # Montamos el init.sql dentro del entrypoint del contenedor
+          - name: init-sql
+            mountPath: /docker-entrypoint-initdb.d/init.sql
+            subPath: init.sql
+
       volumes:
-        - name: postgres-data
-          emptyDir: {}  
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: postgres-pvc
+
+        - name: init-sql
+          configMap:
+            name: init-sql-configmap
