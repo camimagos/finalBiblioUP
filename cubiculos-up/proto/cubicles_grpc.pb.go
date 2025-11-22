@@ -19,7 +19,8 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	MetadataService_GetMetadata_FullMethodName = "/cubicles.MetadataService/GetMetadata"
+	MetadataService_GetMetadata_FullMethodName    = "/cubicles.MetadataService/GetMetadata"
+	MetadataService_CreateMetadata_FullMethodName = "/cubicles.MetadataService/CreateMetadata"
 )
 
 // MetadataServiceClient is the client API for MetadataService service.
@@ -27,6 +28,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type MetadataServiceClient interface {
 	GetMetadata(ctx context.Context, in *GetMetadataRequest, opts ...grpc.CallOption) (*GetMetadataResponse, error)
+	CreateMetadata(ctx context.Context, in *CreateMetadataRequest, opts ...grpc.CallOption) (*CreateMetadataResponse, error)
 }
 
 type metadataServiceClient struct {
@@ -47,11 +49,22 @@ func (c *metadataServiceClient) GetMetadata(ctx context.Context, in *GetMetadata
 	return out, nil
 }
 
+func (c *metadataServiceClient) CreateMetadata(ctx context.Context, in *CreateMetadataRequest, opts ...grpc.CallOption) (*CreateMetadataResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateMetadataResponse)
+	err := c.cc.Invoke(ctx, MetadataService_CreateMetadata_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MetadataServiceServer is the server API for MetadataService service.
 // All implementations must embed UnimplementedMetadataServiceServer
 // for forward compatibility.
 type MetadataServiceServer interface {
 	GetMetadata(context.Context, *GetMetadataRequest) (*GetMetadataResponse, error)
+	CreateMetadata(context.Context, *CreateMetadataRequest) (*CreateMetadataResponse, error)
 	mustEmbedUnimplementedMetadataServiceServer()
 }
 
@@ -64,6 +77,9 @@ type UnimplementedMetadataServiceServer struct{}
 
 func (UnimplementedMetadataServiceServer) GetMetadata(context.Context, *GetMetadataRequest) (*GetMetadataResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetMetadata not implemented")
+}
+func (UnimplementedMetadataServiceServer) CreateMetadata(context.Context, *CreateMetadataRequest) (*CreateMetadataResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateMetadata not implemented")
 }
 func (UnimplementedMetadataServiceServer) mustEmbedUnimplementedMetadataServiceServer() {}
 func (UnimplementedMetadataServiceServer) testEmbeddedByValue()                         {}
@@ -104,6 +120,24 @@ func _MetadataService_GetMetadata_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MetadataService_CreateMetadata_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateMetadataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MetadataServiceServer).CreateMetadata(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MetadataService_CreateMetadata_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MetadataServiceServer).CreateMetadata(ctx, req.(*CreateMetadataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // MetadataService_ServiceDesc is the grpc.ServiceDesc for MetadataService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -114,6 +148,10 @@ var MetadataService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetMetadata",
 			Handler:    _MetadataService_GetMetadata_Handler,
+		},
+		{
+			MethodName: "CreateMetadata",
+			Handler:    _MetadataService_CreateMetadata_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

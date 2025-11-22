@@ -366,6 +366,94 @@ func (x *GetMetadataResponse) GetMetadata() *Metadata {
 	return nil
 }
 
+type CreateMetadataRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Metadata      *Metadata              `protobuf:"bytes,1,opt,name=metadata,proto3" json:"metadata,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateMetadataRequest) Reset() {
+	*x = CreateMetadataRequest{}
+	mi := &file_cubicles_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateMetadataRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateMetadataRequest) ProtoMessage() {}
+
+func (x *CreateMetadataRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_cubicles_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateMetadataRequest.ProtoReflect.Descriptor instead.
+func (*CreateMetadataRequest) Descriptor() ([]byte, []int) {
+	return file_cubicles_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *CreateMetadataRequest) GetMetadata() *Metadata {
+	if x != nil {
+		return x.Metadata
+	}
+	return nil
+}
+
+type CreateMetadataResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	CubicleId     string                 `protobuf:"bytes,1,opt,name=cubicleId,proto3" json:"cubicleId,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateMetadataResponse) Reset() {
+	*x = CreateMetadataResponse{}
+	mi := &file_cubicles_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateMetadataResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateMetadataResponse) ProtoMessage() {}
+
+func (x *CreateMetadataResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_cubicles_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateMetadataResponse.ProtoReflect.Descriptor instead.
+func (*CreateMetadataResponse) Descriptor() ([]byte, []int) {
+	return file_cubicles_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *CreateMetadataResponse) GetCubicleId() string {
+	if x != nil {
+		return x.CubicleId
+	}
+	return ""
+}
+
 type CheckAvailabilityRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	CubicleId     string                 `protobuf:"bytes,1,opt,name=cubicleId,proto3" json:"cubicleId,omitempty"`
@@ -375,7 +463,7 @@ type CheckAvailabilityRequest struct {
 
 func (x *CheckAvailabilityRequest) Reset() {
 	*x = CheckAvailabilityRequest{}
-	mi := &file_cubicles_proto_msgTypes[6]
+	mi := &file_cubicles_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -387,7 +475,7 @@ func (x *CheckAvailabilityRequest) String() string {
 func (*CheckAvailabilityRequest) ProtoMessage() {}
 
 func (x *CheckAvailabilityRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cubicles_proto_msgTypes[6]
+	mi := &file_cubicles_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -400,7 +488,7 @@ func (x *CheckAvailabilityRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CheckAvailabilityRequest.ProtoReflect.Descriptor instead.
 func (*CheckAvailabilityRequest) Descriptor() ([]byte, []int) {
-	return file_cubicles_proto_rawDescGZIP(), []int{6}
+	return file_cubicles_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *CheckAvailabilityRequest) GetCubicleId() string {
@@ -419,7 +507,7 @@ type CheckAvailabilityResponse struct {
 
 func (x *CheckAvailabilityResponse) Reset() {
 	*x = CheckAvailabilityResponse{}
-	mi := &file_cubicles_proto_msgTypes[7]
+	mi := &file_cubicles_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -431,7 +519,7 @@ func (x *CheckAvailabilityResponse) String() string {
 func (*CheckAvailabilityResponse) ProtoMessage() {}
 
 func (x *CheckAvailabilityResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_cubicles_proto_msgTypes[7]
+	mi := &file_cubicles_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -444,7 +532,7 @@ func (x *CheckAvailabilityResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CheckAvailabilityResponse.ProtoReflect.Descriptor instead.
 func (*CheckAvailabilityResponse) Descriptor() ([]byte, []int) {
-	return file_cubicles_proto_rawDescGZIP(), []int{7}
+	return file_cubicles_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *CheckAvailabilityResponse) GetAvailability() *Availability {
@@ -463,7 +551,7 @@ type GetCubicleRequest struct {
 
 func (x *GetCubicleRequest) Reset() {
 	*x = GetCubicleRequest{}
-	mi := &file_cubicles_proto_msgTypes[8]
+	mi := &file_cubicles_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -475,7 +563,7 @@ func (x *GetCubicleRequest) String() string {
 func (*GetCubicleRequest) ProtoMessage() {}
 
 func (x *GetCubicleRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cubicles_proto_msgTypes[8]
+	mi := &file_cubicles_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -488,7 +576,7 @@ func (x *GetCubicleRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetCubicleRequest.ProtoReflect.Descriptor instead.
 func (*GetCubicleRequest) Descriptor() ([]byte, []int) {
-	return file_cubicles_proto_rawDescGZIP(), []int{8}
+	return file_cubicles_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *GetCubicleRequest) GetCubicleId() string {
@@ -507,7 +595,7 @@ type GetCubicleResponse struct {
 
 func (x *GetCubicleResponse) Reset() {
 	*x = GetCubicleResponse{}
-	mi := &file_cubicles_proto_msgTypes[9]
+	mi := &file_cubicles_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -519,7 +607,7 @@ func (x *GetCubicleResponse) String() string {
 func (*GetCubicleResponse) ProtoMessage() {}
 
 func (x *GetCubicleResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_cubicles_proto_msgTypes[9]
+	mi := &file_cubicles_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -532,7 +620,7 @@ func (x *GetCubicleResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetCubicleResponse.ProtoReflect.Descriptor instead.
 func (*GetCubicleResponse) Descriptor() ([]byte, []int) {
-	return file_cubicles_proto_rawDescGZIP(), []int{9}
+	return file_cubicles_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *GetCubicleResponse) GetDetails() *CubicleDetails {
@@ -552,7 +640,7 @@ type CreateReservationRequest struct {
 
 func (x *CreateReservationRequest) Reset() {
 	*x = CreateReservationRequest{}
-	mi := &file_cubicles_proto_msgTypes[10]
+	mi := &file_cubicles_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -564,7 +652,7 @@ func (x *CreateReservationRequest) String() string {
 func (*CreateReservationRequest) ProtoMessage() {}
 
 func (x *CreateReservationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cubicles_proto_msgTypes[10]
+	mi := &file_cubicles_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -577,7 +665,7 @@ func (x *CreateReservationRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateReservationRequest.ProtoReflect.Descriptor instead.
 func (*CreateReservationRequest) Descriptor() ([]byte, []int) {
-	return file_cubicles_proto_rawDescGZIP(), []int{10}
+	return file_cubicles_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *CreateReservationRequest) GetReservation() *Reservation {
@@ -596,7 +684,7 @@ type CreateReservationResponse struct {
 
 func (x *CreateReservationResponse) Reset() {
 	*x = CreateReservationResponse{}
-	mi := &file_cubicles_proto_msgTypes[11]
+	mi := &file_cubicles_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -608,7 +696,7 @@ func (x *CreateReservationResponse) String() string {
 func (*CreateReservationResponse) ProtoMessage() {}
 
 func (x *CreateReservationResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_cubicles_proto_msgTypes[11]
+	mi := &file_cubicles_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -621,7 +709,7 @@ func (x *CreateReservationResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateReservationResponse.ProtoReflect.Descriptor instead.
 func (*CreateReservationResponse) Descriptor() ([]byte, []int) {
-	return file_cubicles_proto_rawDescGZIP(), []int{11}
+	return file_cubicles_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *CreateReservationResponse) GetRecordId() string {
@@ -640,7 +728,7 @@ type CancelReservationRequest struct {
 
 func (x *CancelReservationRequest) Reset() {
 	*x = CancelReservationRequest{}
-	mi := &file_cubicles_proto_msgTypes[12]
+	mi := &file_cubicles_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -652,7 +740,7 @@ func (x *CancelReservationRequest) String() string {
 func (*CancelReservationRequest) ProtoMessage() {}
 
 func (x *CancelReservationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_cubicles_proto_msgTypes[12]
+	mi := &file_cubicles_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -665,7 +753,7 @@ func (x *CancelReservationRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CancelReservationRequest.ProtoReflect.Descriptor instead.
 func (*CancelReservationRequest) Descriptor() ([]byte, []int) {
-	return file_cubicles_proto_rawDescGZIP(), []int{12}
+	return file_cubicles_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *CancelReservationRequest) GetRecordId() string {
@@ -684,7 +772,7 @@ type CancelReservationResponse struct {
 
 func (x *CancelReservationResponse) Reset() {
 	*x = CancelReservationResponse{}
-	mi := &file_cubicles_proto_msgTypes[13]
+	mi := &file_cubicles_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -696,7 +784,7 @@ func (x *CancelReservationResponse) String() string {
 func (*CancelReservationResponse) ProtoMessage() {}
 
 func (x *CancelReservationResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_cubicles_proto_msgTypes[13]
+	mi := &file_cubicles_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -709,7 +797,7 @@ func (x *CancelReservationResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CancelReservationResponse.ProtoReflect.Descriptor instead.
 func (*CancelReservationResponse) Descriptor() ([]byte, []int) {
-	return file_cubicles_proto_rawDescGZIP(), []int{13}
+	return file_cubicles_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *CancelReservationResponse) GetOk() bool {
@@ -747,7 +835,11 @@ const file_cubicles_proto_rawDesc = "" +
 	"\x12GetMetadataRequest\x12\x1c\n" +
 	"\tcubicleId\x18\x01 \x01(\tR\tcubicleId\"E\n" +
 	"\x13GetMetadataResponse\x12.\n" +
-	"\bmetadata\x18\x01 \x01(\v2\x12.cubicles.MetadataR\bmetadata\"8\n" +
+	"\bmetadata\x18\x01 \x01(\v2\x12.cubicles.MetadataR\bmetadata\"G\n" +
+	"\x15CreateMetadataRequest\x12.\n" +
+	"\bmetadata\x18\x01 \x01(\v2\x12.cubicles.MetadataR\bmetadata\"6\n" +
+	"\x16CreateMetadataResponse\x12\x1c\n" +
+	"\tcubicleId\x18\x01 \x01(\tR\tcubicleId\"8\n" +
 	"\x18CheckAvailabilityRequest\x12\x1c\n" +
 	"\tcubicleId\x18\x01 \x01(\tR\tcubicleId\"W\n" +
 	"\x19CheckAvailabilityResponse\x12:\n" +
@@ -763,9 +855,10 @@ const file_cubicles_proto_rawDesc = "" +
 	"\x18CancelReservationRequest\x12\x1a\n" +
 	"\brecordId\x18\x01 \x01(\tR\brecordId\"+\n" +
 	"\x19CancelReservationResponse\x12\x0e\n" +
-	"\x02ok\x18\x01 \x01(\bR\x02ok2]\n" +
+	"\x02ok\x18\x01 \x01(\bR\x02ok2\xb2\x01\n" +
 	"\x0fMetadataService\x12J\n" +
-	"\vGetMetadata\x12\x1c.cubicles.GetMetadataRequest\x1a\x1d.cubicles.GetMetadataResponse2\xae\x02\n" +
+	"\vGetMetadata\x12\x1c.cubicles.GetMetadataRequest\x1a\x1d.cubicles.GetMetadataResponse\x12S\n" +
+	"\x0eCreateMetadata\x12\x1f.cubicles.CreateMetadataRequest\x1a .cubicles.CreateMetadataResponse2\xae\x02\n" +
 	"\x12ReservationService\x12\\\n" +
 	"\x11CheckAvailability\x12\".cubicles.CheckAvailabilityRequest\x1a#.cubicles.CheckAvailabilityResponse\x12\\\n" +
 	"\x11CreateReservation\x12\".cubicles.CreateReservationRequest\x1a#.cubicles.CreateReservationResponse\x12\\\n" +
@@ -786,7 +879,7 @@ func file_cubicles_proto_rawDescGZIP() []byte {
 	return file_cubicles_proto_rawDescData
 }
 
-var file_cubicles_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
+var file_cubicles_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
 var file_cubicles_proto_goTypes = []any{
 	(*Metadata)(nil),                  // 0: cubicles.Metadata
 	(*Reservation)(nil),               // 1: cubicles.Reservation
@@ -794,41 +887,46 @@ var file_cubicles_proto_goTypes = []any{
 	(*CubicleDetails)(nil),            // 3: cubicles.CubicleDetails
 	(*GetMetadataRequest)(nil),        // 4: cubicles.GetMetadataRequest
 	(*GetMetadataResponse)(nil),       // 5: cubicles.GetMetadataResponse
-	(*CheckAvailabilityRequest)(nil),  // 6: cubicles.CheckAvailabilityRequest
-	(*CheckAvailabilityResponse)(nil), // 7: cubicles.CheckAvailabilityResponse
-	(*GetCubicleRequest)(nil),         // 8: cubicles.GetCubicleRequest
-	(*GetCubicleResponse)(nil),        // 9: cubicles.GetCubicleResponse
-	(*CreateReservationRequest)(nil),  // 10: cubicles.CreateReservationRequest
-	(*CreateReservationResponse)(nil), // 11: cubicles.CreateReservationResponse
-	(*CancelReservationRequest)(nil),  // 12: cubicles.CancelReservationRequest
-	(*CancelReservationResponse)(nil), // 13: cubicles.CancelReservationResponse
-	(*timestamppb.Timestamp)(nil),     // 14: google.protobuf.Timestamp
+	(*CreateMetadataRequest)(nil),     // 6: cubicles.CreateMetadataRequest
+	(*CreateMetadataResponse)(nil),    // 7: cubicles.CreateMetadataResponse
+	(*CheckAvailabilityRequest)(nil),  // 8: cubicles.CheckAvailabilityRequest
+	(*CheckAvailabilityResponse)(nil), // 9: cubicles.CheckAvailabilityResponse
+	(*GetCubicleRequest)(nil),         // 10: cubicles.GetCubicleRequest
+	(*GetCubicleResponse)(nil),        // 11: cubicles.GetCubicleResponse
+	(*CreateReservationRequest)(nil),  // 12: cubicles.CreateReservationRequest
+	(*CreateReservationResponse)(nil), // 13: cubicles.CreateReservationResponse
+	(*CancelReservationRequest)(nil),  // 14: cubicles.CancelReservationRequest
+	(*CancelReservationResponse)(nil), // 15: cubicles.CancelReservationResponse
+	(*timestamppb.Timestamp)(nil),     // 16: google.protobuf.Timestamp
 }
 var file_cubicles_proto_depIdxs = []int32{
-	14, // 0: cubicles.Reservation.start:type_name -> google.protobuf.Timestamp
-	14, // 1: cubicles.Reservation.end:type_name -> google.protobuf.Timestamp
-	14, // 2: cubicles.Availability.nextAvailable:type_name -> google.protobuf.Timestamp
+	16, // 0: cubicles.Reservation.start:type_name -> google.protobuf.Timestamp
+	16, // 1: cubicles.Reservation.end:type_name -> google.protobuf.Timestamp
+	16, // 2: cubicles.Availability.nextAvailable:type_name -> google.protobuf.Timestamp
 	0,  // 3: cubicles.CubicleDetails.metadata:type_name -> cubicles.Metadata
 	2,  // 4: cubicles.CubicleDetails.reservation:type_name -> cubicles.Availability
 	0,  // 5: cubicles.GetMetadataResponse.metadata:type_name -> cubicles.Metadata
-	2,  // 6: cubicles.CheckAvailabilityResponse.availability:type_name -> cubicles.Availability
-	3,  // 7: cubicles.GetCubicleResponse.details:type_name -> cubicles.CubicleDetails
-	1,  // 8: cubicles.CreateReservationRequest.reservation:type_name -> cubicles.Reservation
-	4,  // 9: cubicles.MetadataService.GetMetadata:input_type -> cubicles.GetMetadataRequest
-	6,  // 10: cubicles.ReservationService.CheckAvailability:input_type -> cubicles.CheckAvailabilityRequest
-	10, // 11: cubicles.ReservationService.CreateReservation:input_type -> cubicles.CreateReservationRequest
-	12, // 12: cubicles.ReservationService.CancelReservation:input_type -> cubicles.CancelReservationRequest
-	8,  // 13: cubicles.CubicleService.GetCubicle:input_type -> cubicles.GetCubicleRequest
-	5,  // 14: cubicles.MetadataService.GetMetadata:output_type -> cubicles.GetMetadataResponse
-	7,  // 15: cubicles.ReservationService.CheckAvailability:output_type -> cubicles.CheckAvailabilityResponse
-	11, // 16: cubicles.ReservationService.CreateReservation:output_type -> cubicles.CreateReservationResponse
-	13, // 17: cubicles.ReservationService.CancelReservation:output_type -> cubicles.CancelReservationResponse
-	9,  // 18: cubicles.CubicleService.GetCubicle:output_type -> cubicles.GetCubicleResponse
-	14, // [14:19] is the sub-list for method output_type
-	9,  // [9:14] is the sub-list for method input_type
-	9,  // [9:9] is the sub-list for extension type_name
-	9,  // [9:9] is the sub-list for extension extendee
-	0,  // [0:9] is the sub-list for field type_name
+	0,  // 6: cubicles.CreateMetadataRequest.metadata:type_name -> cubicles.Metadata
+	2,  // 7: cubicles.CheckAvailabilityResponse.availability:type_name -> cubicles.Availability
+	3,  // 8: cubicles.GetCubicleResponse.details:type_name -> cubicles.CubicleDetails
+	1,  // 9: cubicles.CreateReservationRequest.reservation:type_name -> cubicles.Reservation
+	4,  // 10: cubicles.MetadataService.GetMetadata:input_type -> cubicles.GetMetadataRequest
+	6,  // 11: cubicles.MetadataService.CreateMetadata:input_type -> cubicles.CreateMetadataRequest
+	8,  // 12: cubicles.ReservationService.CheckAvailability:input_type -> cubicles.CheckAvailabilityRequest
+	12, // 13: cubicles.ReservationService.CreateReservation:input_type -> cubicles.CreateReservationRequest
+	14, // 14: cubicles.ReservationService.CancelReservation:input_type -> cubicles.CancelReservationRequest
+	10, // 15: cubicles.CubicleService.GetCubicle:input_type -> cubicles.GetCubicleRequest
+	5,  // 16: cubicles.MetadataService.GetMetadata:output_type -> cubicles.GetMetadataResponse
+	7,  // 17: cubicles.MetadataService.CreateMetadata:output_type -> cubicles.CreateMetadataResponse
+	9,  // 18: cubicles.ReservationService.CheckAvailability:output_type -> cubicles.CheckAvailabilityResponse
+	13, // 19: cubicles.ReservationService.CreateReservation:output_type -> cubicles.CreateReservationResponse
+	15, // 20: cubicles.ReservationService.CancelReservation:output_type -> cubicles.CancelReservationResponse
+	11, // 21: cubicles.CubicleService.GetCubicle:output_type -> cubicles.GetCubicleResponse
+	16, // [16:22] is the sub-list for method output_type
+	10, // [10:16] is the sub-list for method input_type
+	10, // [10:10] is the sub-list for extension type_name
+	10, // [10:10] is the sub-list for extension extendee
+	0,  // [0:10] is the sub-list for field type_name
 }
 
 func init() { file_cubicles_proto_init() }
@@ -842,7 +940,7 @@ func file_cubicles_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_cubicles_proto_rawDesc), len(file_cubicles_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   14,
+			NumMessages:   16,
 			NumExtensions: 0,
 			NumServices:   3,
 		},

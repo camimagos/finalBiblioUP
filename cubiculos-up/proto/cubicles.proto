@@ -38,6 +38,8 @@ message CubicleDetails {
 
 message GetMetadataRequest { string cubicleId = 1; }
 message GetMetadataResponse { Metadata metadata = 1; }
+message CreateMetadataRequest { Metadata metadata = 1; }
+message CreateMetadataResponse { string cubicleId = 1; }
 
 message CheckAvailabilityRequest { string cubicleId = 1; }
 message CheckAvailabilityResponse { Availability availability = 1; }
@@ -56,6 +58,7 @@ message CancelReservationResponse { bool ok = 1; }
 
 service MetadataService {
   rpc GetMetadata(GetMetadataRequest) returns (GetMetadataResponse);
+  rpc CreateMetadata(CreateMetadataRequest) returns (CreateMetadataResponse);
 }
 
 service ReservationService {
