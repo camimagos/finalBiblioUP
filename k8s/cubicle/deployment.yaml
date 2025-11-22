@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cubicle
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: cubicle
+  template:
+    metadata:
+      labels:
+        app: cubicle
+    spec:
+      containers:
+      - name: cubicle
+        image: cubicle:1.0
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 50053
+        envFrom:
+          - configMapRef:
+              name: cubicle-config
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 300m
+            memory: 256Mi

@@ -2,15 +2,37 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net"
+	"time"
 
 	pb "cubiculosup.com/proto"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/balancer/roundrobin"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/reflection"
+	"google.golang.org/grpc/resolver"
+	"google.golang.org/grpc/resolver/dns"
 )
+
+// init() se ejecuta al inicio del programa.
+// Registra el resolvedor DNS de Go para manejar los nombres de servicios de K8s
+// (ej: 'metadata'), lo cual es crucial para la estabilidad en el arranque del Pod.
+func init() {
+	resolver.Register(dns.NewBuilder())
+}
+
+// En cubicle/cmd/main.go (cerca de los imports)
+
+// newDialer crea un dialer que fuerza la conexión usando IPv4 ("tcp4").
+// Esto resuelve el problema del fallback a la dirección IPv6 [::1] (localhost).
+func newDialer() func(context.Context, string) (net.Conn, error) {
+	return func(ctx context.Context, addr string) (net.Conn, error) {
+		return (&net.Dialer{}).DialContext(ctx, "tcp4", addr)
+	}
+}
 
 type cubicleServer struct {
 	pb.UnimplementedCubicleServiceServer
@@ -18,48 +40,47 @@ type cubicleServer struct {
 	resClient  pb.ReservationServiceClient
 }
 
-// func NewCubicleServer() *cubicleServer {
-// 	// IMPORTANTE:
-// 	// Estos hostnames funcionan dentro del cluster:
-// 	//    metadata.default.svc.cluster.local:50051
-// 	//    reservation.default.svc.cluster.local:50052
-
-// 	metaConn, err := grpc.Dial("metadata.default.svc.cluster.local:50051",
-// 		grpc.WithInsecure(),
-// 		grpc.WithBlock(),
-// 	)
-// 	if err != nil {
-// 		log.Fatalf("cannot connect metadata service: %v", err)
-// 	}
-
-// 	resConn, err := grpc.Dial("reservation.default.svc.cluster.local:50052",
-// 		grpc.WithInsecure(),
-// 		grpc.WithBlock(),
-// 	)
-// 	if err != nil {
-// 		log.Fatalf("cannot connect reservation service: %v", err)
-// 	}
-
-// 	return &cubicleServer{
-// 		metaClient: pb.NewMetadataServiceClient(metaConn),
-// 		resClient:  pb.NewReservationServiceClient(resConn),
-// 	}
-// }
-
-// prueba local
+// NewCubicleServer inicializa los clientes gRPC para los servicios de Metadata y Reservation.
 func NewCubicleServer() *cubicleServer {
-	metaConn, err := grpc.Dial("localhost:50051",
+	// Definimos un contexto con timeout para la conexión inicial, aunque no sea bloqueante.
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	// Usamos el prefijo "dns:///" para forzar al cliente gRPC a usar el resolvedor DNS de Go.
+	// Esto permite el balanceo de carga entre los pods del servicio interno.
+	metaAddr := "dns:///metadata:50051"
+	resAddr := "dns:///reservation:50052"
+
+	// Configuramos Round Robin para balancear la carga entre los Endpoints.
+	serviceConfig := fmt.Sprintf(`{"loadBalancingPolicy":"%s"}`, roundrobin.Name)
+
+	// Creamos el dialer personalizado que fuerza IPv4
+	dialer := newDialer()
+
+	// --- Conexión a Metadata ---
+	metaConn, err := grpc.DialContext(
+		ctx,
+		metaAddr,
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		grpc.WithDefaultServiceConfig(serviceConfig),
+		grpc.WithContextDialer(dialer), // 👈 ¡NUEVA LÍNEA CLAVE!
 	)
+	// Quitamos grpc.WithBlock() y el log.Fatalf para que el servidor pueda arrancar
+	// incluso si los backends no están listos inmediatamente.
 	if err != nil {
-		log.Fatalf("cannot connect to metadata: %v", err)
+		log.Printf("WARNING: Could not connect immediately to metadata service: %v", err)
 	}
 
-	resConn, err := grpc.Dial("localhost:50052",
+	// --- Conexión a Reservation (Puerto 50052) ---
+	resConn, err := grpc.DialContext(
+		ctx,
+		resAddr,
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		grpc.WithDefaultServiceConfig(serviceConfig),
+		grpc.WithContextDialer(dialer), // 👈 ¡NUEVA LÍNEA CLAVE!
 	)
 	if err != nil {
-		log.Fatalf("cannot connect to reservation: %v", err)
+		log.Printf("WARNING: Could not connect immediately to reservation service: %v", err)
 	}
 
 	return &cubicleServer{
@@ -68,17 +89,20 @@ func NewCubicleServer() *cubicleServer {
 	}
 }
 
+// GetCubicle implementa el método del servicio CubicleService.
 func (s *cubicleServer) GetCubicle(ctx context.Context, req *pb.GetCubicleRequest) (*pb.GetCubicleResponse, error) {
 	id := req.CubicleId
 
+	// Llama al servicio Metadata (conexión interna)
 	meta, err := s.metaClient.GetMetadata(ctx, &pb.GetMetadataRequest{CubicleId: id})
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error calling metadata service: %v", err)
 	}
 
+	// Llama al servicio Reservation (conexión interna)
 	avail, err := s.resClient.CheckAvailability(ctx, &pb.CheckAvailabilityRequest{CubicleId: id})
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error calling reservation service: %v", err)
 	}
 
 	details := &pb.CubicleDetails{
@@ -92,7 +116,8 @@ func (s *cubicleServer) GetCubicle(ctx context.Context, req *pb.GetCubicleReques
 }
 
 func main() {
-	lis, err := net.Listen("tcp", ":50053") // PUERTO EXTERNO
+	// Escucha en todas las interfaces en el puerto 50053
+	lis, err := net.Listen("tcp", ":50053")
 	if err != nil {
 		log.Fatalf("error listening: %v", err)
 	}
@@ -100,11 +125,10 @@ func main() {
 	grpcServer := grpc.NewServer()
 	pb.RegisterCubicleServiceServer(grpcServer, NewCubicleServer())
 
-	//local
+	// Habilita la reflexión para la herramienta grpcurl
 	reflection.Register(grpcServer)
 
 	log.Println("Cubicle service running on port 50053")
-	log.Println("Ready to be exposed as LoadBalancer in Kubernetes")
 
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)

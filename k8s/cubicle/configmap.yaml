@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cubicle-config
+data:
+  METADATA_URL: "metadata:50051"
+  RESERVATION_URL: "reservation:50052"

@@ -1,34 +1,23 @@
-# ---------- STAGE 1: Build ----------
-    FROM golang:1.25-bookworm AS builder
+# -------------------- STAGE 1: Build --------------------
+    FROM golang:1.25 AS builder
 
     WORKDIR /app
-    
-    RUN apt-get update && apt-get install -y --no-install-recommends git \
-    && rm -rf /var/lib/apt/lists/*
-        
-    #COPY go.mod go.sum ./
     COPY ../../go.mod ../../go.sum ./
-
     RUN go mod download
-    
-    #COPY . .
     COPY ../../ .
-
     
-    # Compile
-    # Build the service
-    RUN go build -o metadata ./services/metadata/cmd
+    # Compila el ejecutable de metadata
+    RUN CGO_ENABLED=0 go build -o metadata ./services/metadata/cmd
     
-    # ---------- STAGE 2: Run ----------
+    # -------------------- STAGE 2: Run (Distroless) --------------------
     FROM gcr.io/distroless/base-debian12:latest
     
     WORKDIR /
     
-    COPY --from=builder /app/metadata .
-    
-    EXPOSE 50051
+    COPY --from=builder /app/metadata /
     
     USER nonroot:nonroot
     
-    ENTRYPOINT ["/metadata"]
+    EXPOSE 50051
     
+    ENTRYPOINT ["/metadata"]

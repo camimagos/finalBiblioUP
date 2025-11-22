@@ -1,33 +1,23 @@
-# ---------- STAGE 1: Build ----------
-    FROM golang:1.25-bookworm AS builder
+# -------------------- STAGE 1: Build --------------------
+    FROM golang:1.25 AS builder
 
     WORKDIR /app
-    
-    RUN apt-get update && apt-get install -y --no-install-recommends git \
-    && rm -rf /var/lib/apt/lists/*
-        
-    #COPY go.mod go.sum ./
     COPY ../../go.mod ../../go.sum ./
-
     RUN go mod download
-    
-    #COPY . .
     COPY ../../ .
-
     
-    # Build the service
-    RUN go build -o reservation ./services/reservation/cmd
+    # Compila el ejecutable de reservation
+    RUN CGO_ENABLED=0 go build -o reservation ./services/reservation/cmd
     
-    # ---------- STAGE 2: Run ----------
+    # -------------------- STAGE 2: Run (Distroless) --------------------
     FROM gcr.io/distroless/base-debian12:latest
     
     WORKDIR /
     
-    COPY --from=builder /app/reservation .
-    
-    EXPOSE 50052
+    COPY --from=builder /app/reservation /
     
     USER nonroot:nonroot
     
-    ENTRYPOINT ["/reservation"]
+    EXPOSE 50051
     
+    ENTRYPOINT ["/reservation"]
