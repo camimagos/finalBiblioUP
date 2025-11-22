@@ -6,12 +6,14 @@ import (
 	"log"
 	"net"
 	"os"
+	"time"
 
 	pb "cubiculosup.com/proto"
 
 	_ "github.com/lib/pq"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type reservationServer struct {
@@ -51,6 +53,30 @@ func (s *reservationServer) CancelReservation(ctx context.Context, req *pb.Cance
 
 	affected, _ := res.RowsAffected()
 	return &pb.CancelReservationResponse{Ok: affected > 0}, nil
+}
+
+// En services/reservation/cmd/main.go, dentro de type reservationServer struct
+func (s *reservationServer) CheckAvailability(ctx context.Context, req *pb.CheckAvailabilityRequest) (*pb.CheckAvailabilityResponse, error) {
+	// Por ahora, solo devolvemos un estado fijo para probar la conectividad
+	// La lógica real de la DB iría aquí
+	log.Printf("Checking availability for cubicle ID: %s", req.CubicleId)
+
+	// Aquí iría el código SQL para consultar la base de datos
+	// ...
+
+	// Devolvemos una respuesta de ejemplo
+	// Nota: Necesitas la importación "google.golang.org/protobuf/types/known/timestamppb"
+
+	// Suponiendo que el cubículo está disponible ahora, y que la próxima reserva
+	// comienza en el futuro.
+	nextAvailableTime := time.Now().Add(1 * time.Hour)
+
+	return &pb.CheckAvailabilityResponse{
+		Availability: &pb.Availability{
+			AvailableNow:  true,
+			NextAvailable: timestamppb.New(nextAvailableTime),
+		},
+	}, nil
 }
 
 func main() {
