@@ -55,19 +55,16 @@ func (s *reservationServer) CancelReservation(ctx context.Context, req *pb.Cance
 	return &pb.CancelReservationResponse{Ok: affected > 0}, nil
 }
 
-// En services/reservation/cmd/main.go, dentro de type reservationServer struct
 func (s *reservationServer) CheckAvailability(ctx context.Context, req *pb.CheckAvailabilityRequest) (*pb.CheckAvailabilityResponse, error) {
 	cubicleID := req.CubicleId
 	log.Printf("Checking availability for cubicle ID: %s", cubicleID)
 
-	// 1. Definir la hora de referencia (ahora)
-	// Es crucial usar UTC para coincidir con el formato de tu base de datos y evitar problemas de zona horaria.
+	// Definir la hora de referencia (ahora)
 	now := time.Now().In(time.UTC)
 
-	// 2. Buscar la reserva activa AHORA, si existe
+	// Buscar la reserva activa AHORA, si existe
 
-	// Consulta SQL: Busca una reserva CONFIRMED que haya comenzado (start_time <= now)
-	// y que aún no haya terminado (end_time > now).
+	// Busca una reserva CONFIRMED que haya comenzado (start_time <= now) y que aún no haya terminado (end_time > now).
 	activeRow := s.db.QueryRowContext(ctx, `
         SELECT end_time
         FROM reservations
@@ -81,23 +78,21 @@ func (s *reservationServer) CheckAvailability(ctx context.Context, req *pb.Check
 	err := activeRow.Scan(&currentEndTime)
 
 	if err != nil && err != sql.ErrNoRows {
-		// Error de SQL (no es solo que no haya filas)
 		log.Printf("SQL Error checking active reservation: %v", err)
 		return nil, err
 	}
 
-	// 3. Determinar AvailableNow
+	// Determinar AvailableNow
 	availableNow := (err == sql.ErrNoRows) // Es true si no se encontró una fila (no hay reservas activas)
 
 	var nextAvailableTime time.Time
 
 	if !availableNow {
-		// 4. Si hay una reserva activa, la próxima disponibilidad es cuando termine la actual.
-		// Ya tenemos currentEndTime de la consulta anterior.
+		// Si hay una reserva activa, la próxima disponibilidad es cuando termine la actual.
 		nextAvailableTime = currentEndTime
 
 	} else {
-		// 5. Si está disponible ahora, busca la PRÓXIMA reserva
+		// Si está disponible ahora, busca la PRÓXIMA reserva
 
 		// Consulta SQL: Busca la reserva CONFIRMED más próxima en el futuro (start_time > now).
 		nextRow := s.db.QueryRowContext(ctx, `
@@ -111,7 +106,6 @@ func (s *reservationServer) CheckAvailability(ctx context.Context, req *pb.Check
 		err = nextRow.Scan(&nextAvailableTime)
 
 		if err != nil && err != sql.ErrNoRows {
-			// Error de SQL
 			log.Printf("SQL Error checking next reservation: %v", err)
 			return nil, err
 		}
@@ -123,7 +117,7 @@ func (s *reservationServer) CheckAvailability(ctx context.Context, req *pb.Check
 		}
 	}
 
-	// 6. Construir la respuesta
+	// Construir la respuesta
 	return &pb.CheckAvailabilityResponse{
 		Availability: &pb.Availability{
 			AvailableNow:  availableNow,

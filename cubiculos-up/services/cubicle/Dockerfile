@@ -21,9 +21,6 @@
     # -------------------- STAGE 2: Run (Distroless) --------------------
     FROM gcr.io/distroless/static-debian12:latest
     
-    # Usa 'static' en lugar de 'base' si CGO está deshabilitado. Es aún más pequeño.
-    # Nota: Si tu código usa librerías C (como el driver de Postgres), debes volver a 'base'. 
-    # Ya que Metadata y Reservation se conectan a Postgres, usaremos 'base' para la plantilla general.
     
     FROM gcr.io/distroless/base-debian12:latest
     

@@ -21,10 +21,6 @@ func init() {
 	resolver.SetDefaultScheme("dns")
 }
 
-// En cubicle/cmd/main.go (cerca de los imports)
-
-// newDialer crea un dialer que fuerza la conexión usando IPv4 ("tcp4").
-// Esto resuelve el problema del fallback a la dirección IPv6 [::1] (localhost).
 func newDialer() func(context.Context, string) (net.Conn, error) {
 	return func(ctx context.Context, addr string) (net.Conn, error) {
 		return (&net.Dialer{}).DialContext(ctx, "tcp4", addr)
@@ -39,7 +35,7 @@ type cubicleServer struct {
 
 // NewCubicleServer inicializa los clientes gRPC para los servicios de Metadata y Reservation.
 func NewCubicleServer() *cubicleServer {
-	// Definimos un contexto con timeout para la conexión inicial, aunque no sea bloqueante.
+	// Definimos un contexto con timeout para la conexión inicial
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -48,7 +44,6 @@ func NewCubicleServer() *cubicleServer {
 	metaAddr := "dns:///metadata:50051"
 	resAddr := "dns:///reservation:50052"
 
-	// Configuramos Round Robin para balancear la carga entre los Endpoints.
 	serviceConfig := fmt.Sprintf(`{"loadBalancingPolicy":"%s"}`, roundrobin.Name)
 
 	// Creamos el dialer personalizado que fuerza IPv4
@@ -60,10 +55,9 @@ func NewCubicleServer() *cubicleServer {
 		metaAddr,
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithDefaultServiceConfig(serviceConfig),
-		grpc.WithContextDialer(dialer), // 👈 ¡NUEVA LÍNEA CLAVE!
+		grpc.WithContextDialer(dialer),
 	)
-	// Quitamos grpc.WithBlock() y el log.Fatalf para que el servidor pueda arrancar
-	// incluso si los backends no están listos inmediatamente.
+
 	if err != nil {
 		log.Printf("WARNING: Could not connect immediately to metadata service: %v", err)
 	}
@@ -74,7 +68,7 @@ func NewCubicleServer() *cubicleServer {
 		resAddr,
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithDefaultServiceConfig(serviceConfig),
-		grpc.WithContextDialer(dialer), // 👈 ¡NUEVA LÍNEA CLAVE!
+		grpc.WithContextDialer(dialer),
 	)
 	if err != nil {
 		log.Printf("WARNING: Could not connect immediately to reservation service: %v", err)
@@ -122,7 +116,6 @@ func main() {
 	grpcServer := grpc.NewServer()
 	pb.RegisterCubicleServiceServer(grpcServer, NewCubicleServer())
 
-	// Habilita la reflexión para la herramienta grpcurl
 	reflection.Register(grpcServer)
 
 	log.Println("Cubicle service running on port 50053")

@@ -55,12 +55,10 @@ func main() {
 	dbPassword := os.Getenv("DB_PASSWORD")
 	dbName := os.Getenv("DB_NAME")
 
-	// 2. Usamos la IP de ClusterIP del servicio para forzar IPv4 (la que obtuviste de 'kubectl get svc')
-	// Esto evita el fallo de DNS/IPv6 ([::1]).
 	const dbHostIP = "10.96.128.214"
 	const dbPort = "5432"
 
-	// 3. Construye la URL de conexión de PostgreSQL
+	// Construye la URL de conexión de PostgreSQL
 	dbURL := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable",
 		dbUser,
 		dbPassword,
@@ -69,10 +67,7 @@ func main() {
 		dbName,
 	)
 
-	// Si tus secretos son correctos, dbURL se verá como:
-	// postgres://postgres:password@10.96.128.214:5432/cubiculos?sslmode=disable
-
-	// 4. Abre la conexión a la base de datos
+	// Abre la conexión a la base de datos
 	db, err := sql.Open("postgres", dbURL)
 	if err != nil {
 		log.Fatalf("cannot open db: %v", err)
@@ -80,7 +75,6 @@ func main() {
 
 	// Test connection
 	if err := db.Ping(); err != nil {
-		// Este es el error que causaba el CrashLoopBackOff: ¡resuelto con la IP fija!
 		log.Fatalf("ping error: %v", err)
 	}
 	// --- FIN DEL CÓDIGO DE CONEXIÓN A DB ---
