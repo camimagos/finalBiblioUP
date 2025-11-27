@@ -1,0 +1,15 @@
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: my-ip-address-pool
+  namespace: metallb-system
+spec:
+  # Rango de IPs asignado para LoadBalancers (debe estar dentro de 172.19.0.0/16)
+  addresses:
+  - 172.19.0.1-172.19.255.254 
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: example
+  namespace: metallb-system
